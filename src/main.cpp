@@ -3,9 +3,9 @@
 #define channelR A1
 #define outPin 5
 uint32_t curMillis, lastTick;
-int processingTime = 5, count;//processingTime in seconds
+int processingTime = 15, count; //processingTime in seconds
 int testValue = 80;
-int sleepTime = 5; //in seconds
+int sleepTime = 10; //in seconds
 float soundValue(int precision = 10);
 
 void setup()
@@ -19,13 +19,13 @@ void setup()
 
 void loop()
 {
-  
-  if (testValue >= 50)
+  Serial.println(soundValue());
+  if (soundValue() >= 50)
   {
     curMillis = millis();
     Serial.println("CurMillis");
     Serial.println(curMillis);
-    if (curMillis - lastTick >= (processingTime*1000))
+    if (curMillis - lastTick >= (processingTime * 1000))
     {
       Serial.println("Count:");
       Serial.println(count);
@@ -33,29 +33,26 @@ void loop()
       {
         digitalWrite(outPin, HIGH);
         delay(5000);
-        digitalWrite(outPin,LOW);
+        digitalWrite(outPin, LOW);
         count = 0;
-      testValue = 0;
+        Serial.println("Delay");
+        delay(sleepTime * 1000);
+        Serial.println("stop delay");
+        
       }
-      
-      
-      
-      Serial.println("Delay");
-      delay(sleepTime*1000);
-      Serial.println("stop delay");
       lastTick = millis();
       
-      
     }
-    else if (testValue > 70)
+    else if (soundValue() > 70)
     {
       count++;
       // Serial.println(count);
     }
-  
-    
+    else if (soundValue() < 50)
+    {
+      count = 0;
+    }
   }
-  testValue =80;
 }
 
 float soundValue(int precision)
